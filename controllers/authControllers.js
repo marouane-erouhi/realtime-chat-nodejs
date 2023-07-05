@@ -1,43 +1,58 @@
-const UserModel = require('../schemas/userSchema')
+const User = require('../models/User')
 
-module.exports.signup_get = (req, res) => {
+module.exports.signup_get = async (req, res, next) => {
     res.render('signup')
 }
 
-module.exports.signup_post = (req, res) => {
+const HandleErrors = (err) => {
+    const Errors = {
+        email: [],
+        password: [],
+    }
 
-    // req.body
-    console.log(req.body)
+    // User already exists
+    if(err.code == 11000){
+        Errors.email.push('Email already in use')
+        return Errors
+    }
 
-    UserModel.findOne({ username: req.username })
-        .then(user => {
-            if (user) {
-                console.log('User found:', user);
-                // return error, user already exists
-                res.send('user already exists')
-            } else {
-                // create user
-                const newUser = new UserModel({ username: req.username, password: req.password });
-                newUser.save()
-                    .then(savedUser => {
-                        console.log("savedUser: " + savedUser)
-                    })
-                    .catch(err => {
-                        console.log("error while saving user: " + err)
-                    })
-                res.send('user registred')
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    // Validation errors
+    Object.values(err.errors).forEach(({ properties }) => {
+        Errors[properties.path].push(properties.message)
+    })
+    return Errors
+}
+module.exports.signup_post = async (req, res, next) => {
+    const {email, password} = req.body
+    try{
+        // create user
+        await User.create({ email: email, password: password })
+    }catch (err){
+        const errors = HandleErrors(err)
+        // console.log(errors);
+        res.status(400).json(errors)
+        next()
+        return
+    }
 
+    res.status(400).send(`user ${email} registred`)
 }
 
-module.exports.signin_get = (req, res) => {
+module.exports.signin_get = async (req, res, next) => {
     res.render('signin')
 }
 
-module.exports.signin_post = (req, res) => {
-    res.send("new signin")
+module.exports.signin_post = async (req, res, next) => {
+    const { email, password } = req.body
+    const existingUser = await User.findOne({ email: email, password: password })
+
+    // check if 
+    if (existingUser) {
+        res.send(`Wencome back ${email}`)
+        next()
+        return
+    }
+
+    res.send("Wrong credentials, try again")
+    next()
 }
