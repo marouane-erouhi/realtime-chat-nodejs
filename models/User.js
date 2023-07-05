@@ -24,4 +24,20 @@ UserSchema.pre('save', async function(next) {
     next()
 })
 
+// UserSchema.pre(/^findOne/, async function (next) {
+//     console.log('pre')
+//     console.log(this._conditions.password);
+//     const salt = await bcrypt.genSalt();
+//     this._conditions.password = await bcrypt.hash(this._conditions.password, salt)
+//     console.log(this._conditions.password);
+//     next()
+// });
+
+UserSchema.statics.login = async function({email, password}) {
+    console.log('login static method')
+    // find the email, then compare the hash with plain password
+
+
+}
+
 module.exports = User = mongoose.model('user', UserSchema);

@@ -38,11 +38,11 @@ module.exports.signup_post = async (req, res, next) => {
     res.status(400).send(`user ${email} registred`)
 }
 
-module.exports.signin_get = async (req, res, next) => {
-    res.render('signin')
+module.exports.login_get = async (req, res, next) => {
+    res.render('login')
 }
 
-module.exports.signin_post = async (req, res, next) => {
+module.exports.login_post = async (req, res, next) => {
     const { email, password } = req.body
     const existingUser = await User.findOne({ email: email, password: password })
 
