@@ -2,17 +2,35 @@
 <html>
 
 <head>
-    <title>Signup</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
-    <form id="form" action="">
-        <label>Username: </label>
-        <input id="username" autocomplete="off" />
-        <label>Password: </label>
-        <input id="password1" autocomplete="off" /><button>Send</button>
-        
+    <form id="form" action="submit">
+        <h2>Login</h2>
+        <label for="email">Email: </label>
+        <input type="email" name="email" required />
+        <div class="email error"></div>
+
+        <label for="password">Password: </label>
+        <input type="password" name="password" required />
+        <div class="email error"></div>
+
+        <button>Submit</button>
     </form>
+
+    <script>
+        const form = document.querySelector('form')
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+
+            const email = form.email.value
+            const password = form.password.value
+            console.log(email + ' - ' + password)
+        })
+
+    </script>
 
 </body>
 
