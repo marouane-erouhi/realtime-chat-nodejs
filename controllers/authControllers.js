@@ -1,8 +1,5 @@
 const User = require('../models/User')
-
-module.exports.signup_get = async (req, res, next) => {
-    res.render('signup')
-}
+const jwt = require('jsonwebtoken')
 
 const HandleErrors = (err) => {
     const Errors = {
@@ -11,7 +8,7 @@ const HandleErrors = (err) => {
     }
 
     // User already exists
-    if(err.code == 11000){
+    if (err.code == 11000) {
         Errors.email.push('Email already in use')
         return Errors
     }
@@ -22,20 +19,34 @@ const HandleErrors = (err) => {
     })
     return Errors
 }
+
+const maxAge = 3 * 24 * 60 * 60 //3 days in secconds
+const createToken = (id) => {
+    return jwt.sign({id}, 'secret secret, hehe', {
+        expiresIn: maxAge
+    })
+}
+
+module.exports.signup_get = async (req, res, next) => {
+    res.render('signup')
+}
+
 module.exports.signup_post = async (req, res, next) => {
     const {email, password} = req.body
     try{
         // create user
-        await User.create({ email: email, password: password })
-    }catch (err){
+        const user = await User.create({ email: email, password: password })
+        const token = createToken(user._id)
+        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
+        res.status(201).json({ user: user._id })
+    } catch (err) {
         const errors = HandleErrors(err)
         // console.log(errors);
-        res.status(400).json(errors)
+        res.status(400).json({errors})
         next()
         return
     }
 
-    res.status(400).send(`user ${email} registred`)
 }
 
 module.exports.login_get = async (req, res, next) => {
