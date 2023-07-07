@@ -7,12 +7,15 @@ require('dotenv').config()
 const { Server } = require("socket.io");
 const io = new Server(server);
 const CookieParser = require('cookie-parser')
-const AuthRouters = require('./routes/authRoutes')
 
+// Routes
+const AuthRouters = require('./routes/authRoutes')
+const ChatRouters = require('./routes/chats')
+
+// mongo
 const dbURI = 'mongodb+srv://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@realtime-chat-cluster.3sczqjy.mongodb.net/?retryWrites=true&w=majority'
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true }) 
     .catch((err) => console.log(err))
-
 const connection = mongoose.connection;
 connection.once("open", function () {
     console.log("MongoDB database connection established successfully");
@@ -27,12 +30,12 @@ app.use(CookieParser())
 
 // routes
 app.use(AuthRouters)
-
+app.use(ChatRouters)
 app.get('/', (req, res) => {
-    res.render('chat_page')
+    res.render('landing_page')
 });
 
-
+// events
 io.on('connection', (socket) => {
     console.log('a user connected');
 
@@ -45,7 +48,6 @@ io.on('connection', (socket) => {
         console.log('user disconnected');
     });
 });
-
 
 server.listen(3000, () => {
     console.log('listening on *:3000');
