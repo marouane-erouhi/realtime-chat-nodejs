@@ -35,7 +35,9 @@ const createToken = (id) => {
 }
 
 module.exports.signup_get = async (req, res, next) => {
-    res.render('signup')
+    res.render('signup', {
+        title: 'Signup'
+    })
 }
 
 module.exports.signup_post = async (req, res, next) => {
@@ -57,7 +59,9 @@ module.exports.signup_post = async (req, res, next) => {
 }
 
 module.exports.login_get = async (req, res, next) => {
-    res.render('login')
+    res.render('login', {
+        title: 'Login'
+    })
 }
 
 module.exports.login_post = async (req, res, next) => {
@@ -74,4 +78,9 @@ module.exports.login_post = async (req, res, next) => {
     }
 
     next()
+}
+
+module.exports.logout_get = async (req, res, next) => {
+    res.cookie('jwt', '', {maxAge:1})
+    res.redirect('/')
 }

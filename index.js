@@ -8,6 +8,8 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const CookieParser = require('cookie-parser')
 
+const { checkUser } = require('./middleware/Auth')
+
 // Routes
 const AuthRouters = require('./routes/authRoutes')
 const ChatRouters = require('./routes/chats')
@@ -29,10 +31,13 @@ app.use(express.json())
 app.use(CookieParser())
 
 // routes
+app.get('*', checkUser)// all get requests
 app.use(AuthRouters)
 app.use(ChatRouters)
 app.get('/', (req, res) => {
-    res.render('landing_page')
+    res.render('landing_page', {
+        title: 'Home page'
+    })
 });
 
 // events
