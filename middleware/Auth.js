@@ -41,4 +41,24 @@ const checkUser = (req, res, next) => {
     }
 }
 
-module.exports = { requireMiddleware, checkUser }
+const redirectIfLogedin = (req, res, next) => {
+    const token = req.cookies.jwt
+
+    if (token) {
+        jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+            if (err) {
+                console.log(err)
+                next()
+            }
+            else {
+                // const user = await User.findById(decoded.id)
+                res.redirect('/')
+                next()
+            }
+        })
+    } else {
+        next()
+    }
+}
+
+module.exports = { requireMiddleware, checkUser, redirectIfLogedin }
