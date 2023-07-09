@@ -4,11 +4,12 @@ const jwt = require('jsonwebtoken')
 const HandleErrors = (err) => {
     const Errors = {
         email: [],
+        username: [],
         password: [],
     }
 
     //bad email or pass
-    if (err.message === 'incorrect email') Errors.email.push('This email is not registered')
+    if (err.message === 'user not found') Errors.email.push('This user those not exist')
     if (err.message === 'incorrect password') Errors.password.push('Password incorrect')
 
     // User already exists
@@ -41,10 +42,17 @@ module.exports.signup_get = async (req, res, next) => {
 }
 
 module.exports.signup_post = async (req, res, next) => {
-    const {email, password} = req.body
+    const {email, username, password} = req.body
+
     try{
         // create user
-        const user = await User.create({ email: email, password: password })
+        let user
+        if (email === '') {
+            user = await User.create({ username, password })
+        }else{
+            user = await User.create({ username, email, password })
+        }
+        
         const token = createToken(user._id)
         res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
         res.status(201).json({ user: user._id })
@@ -65,10 +73,10 @@ module.exports.login_get = async (req, res, next) => {
 }
 
 module.exports.login_post = async (req, res, next) => {
-    const { email, password } = req.body
+    const { email, username, password } = req.body
 
     try{
-        const user = await User.login(email, password)
+        const user = await User.login(email, password, username)
         const token = createToken(user._id)
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 })
         res.status(201).json({ user: user._id })

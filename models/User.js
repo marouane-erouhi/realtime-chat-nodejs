@@ -3,12 +3,17 @@ const validator = require('validator');
 const bcrypt = require('bcrypt')
 
 const UserSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: [true, 'Please enter a username'],
+        unique: [true, 'Username is take, try a diffrent one'],
+        lowercase: true,
+    },
     email: {
         type: String,
-        required: [true, 'Please enter an email'],
         unique: true,
         lowercase: true,
-        validate: [validator.isEmail , 'Please enter a valide email address']
+        validate: [validator.isEmail , 'Please enter a valid email address']
     },
     password: {
         type: String,
@@ -24,18 +29,10 @@ UserSchema.pre('save', async function(next) {
     next()
 })
 
-// UserSchema.pre(/^findOne/, async function (next) {
-//     console.log('pre')
-//     console.log(this._conditions.password);
-//     const salt = await bcrypt.genSalt();
-//     this._conditions.password = await bcrypt.hash(this._conditions.password, salt)
-//     console.log(this._conditions.password);
-//     next()
-// });
-
-UserSchema.statics.login = async function(email, password) {
-    const user = await this.findOne({ email })
-    if(!user)   throw Error("incorrect email")
+UserSchema.statics.login = async function(email, password, username) {
+    // const user = await this.findOne({ username })
+    const user = await this.findOne({ $or: [{ username }, { email }] });
+    if (!user) throw Error("user not found")
     const auth = await bcrypt.compare(password, user.password) // check password
     if(!auth)   throw Error('incorrect password')
     return user
