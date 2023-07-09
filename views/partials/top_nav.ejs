@@ -1,0 +1,13 @@
+<nav>
+    <h1><a href="/">Live chat</a></h1>
+    <ul>
+        <% if (user) { %>
+            <li>Welcome <%= user.username %>
+            </li>
+            <li><a href="/logout">Logout</a></li>
+            <% }else{ %>
+                <li><a href="/login">Log in</a></li>
+                <li><a href="/signup" class="btn">Sign up</a></li>
+                <% } %>
+    </ul>
+</nav>

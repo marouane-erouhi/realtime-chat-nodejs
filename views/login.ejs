@@ -1,5 +1,6 @@
 <%- include('partials/header'); %>
-
+<body>
+    <%- include('partials/top_nav'); %>
     <form id="form" action="submit">
         <h2>Login</h2>
         <label for="user">Username or Email: </label>
@@ -58,7 +59,7 @@
                 }
                 // redirect if succesfull
                 if (data.user) {
-                    location.assign('/')
+                    location.assign('/chat')
                 }
             } catch (err) {
                 console.error('Fetch error')
