@@ -1,7 +1,7 @@
 <%- include('partials/header'); %>
 <body>
     <%- include('partials/top_nav'); %>
-    <form id="form" action="submit">
+    <form id="login-form" action="submit">
         <h2>Login</h2>
         <label for="user">Username or Email: </label>
         <input type="text" name="user" required />
@@ -15,7 +15,7 @@
     </form>
 
     <script>
-        const form = document.querySelector('form')
+        const form = document.querySelector('#login-form')
 
         const emailError = document.querySelector('.user.error')
         const passwordError = document.querySelector('.password.error')

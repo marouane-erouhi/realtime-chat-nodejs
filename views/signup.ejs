@@ -2,7 +2,7 @@
 <body>
     <%- include('partials/top_nav'); %>
 
-    <form id="form" action="submit">
+    <form id="signup-form" action="submit">
         <h2>Sign up</h2>
         <label for="username">Username: </label>
         <input type="text" name="username" required />
@@ -20,7 +20,7 @@
     </form>
 
     <script>
-        const form = document.querySelector('form')
+        const form = document.querySelector('#signup-form')
 
         const emailError = document.querySelector('.email.error')
         const usernameError = document.querySelector('.username.error')
