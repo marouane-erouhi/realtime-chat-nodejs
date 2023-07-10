@@ -1,0 +1,39 @@
+/* google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+body {
+    margin: 20px 40px;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    background: #fafafa;
+}
+
+h1,
+h2,
+h3,
+h4,
+ul,
+li,
+a,
+p,
+input,
+label,
+button,
+div,
+footer {
+    margin: 0;
+    padding: 0;
+    font-family: 'Quicksand', sans-serif;
+    color: #444;
+}
+
+.btn {
+    border-radius: 36px;
+    background: #FEE996;
+}
+
+footer {
+    text-align: center;
+    margin-top: 120px;
+    color: #aaa;
+}
