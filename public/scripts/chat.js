@@ -1,12 +1,13 @@
 var socket = io();
 
+const cookies = parseCookies()
 let form = document.getElementById('userInputForm');
 let userChatInput = document.getElementById('userChatInput');
 let messages = document.querySelector('.chat__conversation-board');
 let username = "<%= String(user.username) %>"
 
-const createMessageHTML = (username, msg, reversed) => {
-    const isReversed = reversed ? 'reversed' : ''
+const createMessageHTML = (username, msg) => {
+    const isReversed = username === cookies.username ? 'reversed' : ''
     const template = `
     <div class="chat__conversation-board__message-container ${isReversed}">
         <div class="chat__conversation-board__message__person">
@@ -43,19 +44,32 @@ const createMessageHTML = (username, msg, reversed) => {
     return template
 }
 
+function parseCookies() {
+    var cookies = document.cookie.split(';');
+    var cookieObj = {};
+
+    cookies.forEach(function (cookie) {
+        var parts = cookie.trim().split('=');
+        var name = decodeURIComponent(parts[0]);
+        var value = decodeURIComponent(parts[1]);
+        cookieObj[name] = value;
+    });
+
+    return cookieObj;
+}
+
 form.addEventListener('submit', function (e) {
     e.preventDefault();
+
     if (userChatInput.value) {
-        socket.emit('chat message', { username, msg: userChatInput.value }); // send message
+        socket.emit('chat message', { username: cookies.username, msg: userChatInput.value }); // send message
         userChatInput.value = ''; // reset chat
     }
 });
 
 socket.on('chat message', function (res) {
-    // if user == me: reversed=true, if any other user: reversed=false   
-    let item = createMessageHTML(res.username, res.msg, false)
+    // console.log(res)
+    let item = createMessageHTML(res.username, res.msg)
     messages.innerHTML += item
     messages.scrollTop = messages.scrollHeight;
 });
-
-console.log(document.cookie)
