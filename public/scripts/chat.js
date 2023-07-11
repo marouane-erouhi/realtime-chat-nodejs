@@ -11,9 +11,11 @@ const createMessageHTML = (username, msg) => {
     const template = `
     <div class="chat__conversation-board__message-container ${isReversed}">
         <div class="chat__conversation-board__message__person">
-            <div class="chat__conversation-board__message__person__avatar"><img
-                    src="https://randomuser.me/api/portraits/men/32.jpg" alt="Thomas Rogh"></div><span
-                class="chat__conversation-board__message__person__nickname">${username}</span>
+            <div class="chat__conversation-board__message__person__avatar">
+                <!-- <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="${username} profile picture" /> -->
+                <div class="profile-picture-letter"> ${username[0]} </div>
+            </div>
+            <span class="chat__conversation-board__message__person__nickname">${username}</span>
         </div>
         <div class="chat__conversation-board__message__context">
             <div class="chat__conversation-board__message__bubble"> <span>${msg}</span></div>

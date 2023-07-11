@@ -109,7 +109,7 @@
     width: 100%;
 }
 
-#chat .chat__conversation-board__message__person__avatar img {
+#chat .chat__conversation-board__message__person__avatar .profile-picture-letter {
     height: 100%;
     width: auto;
 }
