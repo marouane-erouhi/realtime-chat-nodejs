@@ -10,6 +10,8 @@ const CookieParser = require('cookie-parser')
 
 const { checkUser } = require('./middleware/Auth')
 
+const port = process.env.PORT
+
 // Routes
 const AuthRouters = require('./routes/authRoutes')
 const ChatRouters = require('./routes/chats')
@@ -54,8 +56,8 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3000, () => {
-    console.log('listening on *:3000');
+server.listen(port, () => {
+    console.log(`listening on *:${port}`);
 });
 
 
